@@ -25,7 +25,7 @@ export default function Home({ loginUser }: App_Home) {
         {hasError && exception.status}
         {exception && exception.message}
         {user && user.jwt} {user.user && user.user.username}
-        <input type="email" name="identifier" placeholder="Email" />
+        <input type="text" name="identifier" placeholder="Email" />
         <input type="password" name="password" placeholder="password" />
         <button type="submit">Login</button>
       </form>
