@@ -1,42 +1,38 @@
-import { T_Request } from './types';
+import { App_Request } from './types';
 import { API_END_POINTS } from './enums';
-import { REQUEST_METHODS } from './constants';
 
-export function getRequestObject(request: T_Request) {
-  return {
-    method: request.method ? request.method : REQUEST_METHODS.GET,
-    headers: request.header ? request.header : {},
-    body: request.body ? request.body : null
-  };
-}
+export function getRequestConfig(identifier: number, request: App_Request) {
+  let url;
 
-export function getRequestPath(identifier: any, request?: any) {
   switch (identifier) {
     case API_END_POINTS.LOGIN:
-      return '/auth/local';
-
+      url = '/auth/local';
+      break;
     case API_END_POINTS.REGISTER:
-      return '/auth/local/register';
-
+      url = '/auth/local/register';
+      break;
     case API_END_POINTS.READ_USER:
-      return '/users/me?populate[orders][populate][products]=*';
-
+      url = '/users/me?populate[orders][populate][products]=*';
+      break;
     case API_END_POINTS.READ_PRODUCTS:
-      return '/products?populate=*';
-
+      url = '/products?populate=*';
+      break;
     case API_END_POINTS.READ_PRODUCT:
-      return `/products/${request.id}?populate=*`;
-
+      url = `/products/${request.params.id}?populate=*`;
+      break;
     case API_END_POINTS.READ_ORDER:
-      return `/orders/${request.id}?populate=*`;
-
+      url = `/orders/${request.params.id}?populate=*`;
+      break;
     case API_END_POINTS.CREATE_ORDER:
-      return '/orders';
-
+      url = '/orders';
+      break;
     case API_END_POINTS.READ_DOWNLOAD:
-      return `/download-verifications/${request.id}`;
-
+      url = `/download-verifications/${request.params.id}`;
+      break;
     default:
-      return '/products?populate=*';
+      url = '/products?populate=*';
   }
+
+  request.url = url;
+  return request;
 }

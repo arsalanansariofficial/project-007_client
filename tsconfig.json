@@ -1,13 +1,6 @@
 {
   "exclude": ["node_modules"],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/utils/actions/weather-actions.tes.ts",
-    "src/utils/actions/dummy/weather-actions_dummy.test.js"
-, "src/lib/actions.test.ts"  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "compilerOptions": {
     "strict": true,
     "noEmit": true,
