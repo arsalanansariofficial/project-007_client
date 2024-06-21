@@ -1,9 +1,12 @@
 'use server';
 import axios from 'axios';
-import { RESPONSE_STATUS } from './constants';
+import processEnv from '../../next-env';
+import { API_END_POINTS } from './enums';
+import { getRequestConfig } from './utils';
+import { REQUEST_BODY, REQUEST_METHODS, RESPONSE_STATUS } from './constants';
 import { App_Authenticated_User, App_Exception, App_Request } from './types';
 
-async function sendRequest(request: App_Request) {
+export async function sendRequest(request: App_Request) {
   try {
     return (await axios.request(request as any)).data as App_Authenticated_User;
   } catch (error: any) {
@@ -17,6 +20,32 @@ async function sendRequest(request: App_Request) {
   }
 }
 
-export async function loginUser(options: App_Request) {
-  return await sendRequest(options);
+export async function loginUser(
+  _state: App_Authenticated_User | App_Exception,
+  formdata: FormData
+) {
+  const identifier = formdata.get(REQUEST_BODY.USER_AUTHENTICATION.identifier);
+  const password = formdata.get(REQUEST_BODY.USER_AUTHENTICATION.password);
+
+  if (!identifier || !password)
+    return {
+      details: {},
+      name: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.text,
+      message: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.text,
+      status: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.status
+    } as App_Exception;
+
+  return await sendRequest(
+    getRequestConfig(API_END_POINTS.LOGIN, {
+      url: String(),
+      method: REQUEST_METHODS.POST,
+      baseURL: processEnv.BASE_URL,
+      headers: { 'content-type': 'application/json' },
+      params: {},
+      data: {
+        identifier,
+        password
+      }
+    })
+  );
 }

@@ -42,3 +42,6 @@ package-lock.json
 
 # jest babel
 babel.config.json
+
+# notes
+notes

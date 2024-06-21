@@ -6,6 +6,10 @@ export const REQUEST_METHODS = {
 };
 
 export const RESPONSE_STATUS = {
+  OK: {
+    status: 200,
+    text: 'Success'
+  },
   BAD_REQUEST: {
     status: 400,
     text: 'Bad Request'
@@ -13,5 +17,12 @@ export const RESPONSE_STATUS = {
   INTERNAL_SERVER_ERROR: {
     status: 500,
     text: 'Internal Server Error'
+  }
+};
+
+export const REQUEST_BODY = {
+  USER_AUTHENTICATION: {
+    identifier: 'identifier',
+    password: 'password'
   }
 };

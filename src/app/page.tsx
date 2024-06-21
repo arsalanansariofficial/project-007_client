@@ -1,4 +1,5 @@
 import './main.css';
+import Home from '@/components/home';
 import { loginUser } from '@/lib/actions';
 
 export const metadata = {
@@ -7,16 +8,5 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  async function login(event: any) {}
-
-  return (
-    <main>
-      <h1>Home Page</h1>
-      <form action={loginUser}>
-        <input type="email" name="identifier" placeholder="Email" />
-        <input type="password" name="password" placeholder="password" />
-        <button type="submit">Login</button>
-      </form>
-    </main>
-  );
+  return <Home loginUser={loginUser} />;
 }
