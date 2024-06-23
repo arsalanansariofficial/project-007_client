@@ -8,7 +8,7 @@ import { App_Authenticated_User, App_Exception, App_Request } from './types';
 
 export async function sendRequest(request: App_Request) {
   try {
-    return (await axios.request(request as any)).data as App_Authenticated_User;
+    return (await axios.request(request as any)).data;
   } catch (error: any) {
     const exception = error?.response?.data?.error as App_Exception;
     return {
@@ -35,7 +35,7 @@ export async function loginUser(
       status: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.status
     } as App_Exception;
 
-  return await sendRequest(
+  return (await sendRequest(
     getRequestConfig(API_END_POINTS.LOGIN, {
       url: String(),
       method: REQUEST_METHODS.POST,
@@ -46,6 +46,24 @@ export async function loginUser(
         identifier,
         password
       }
+    })
+  )) as App_Authenticated_User | App_Exception;
+}
+
+export async function getSales(_state: any, formdata: FormData) {
+  const token = formdata.get('token') as string;
+
+  return await sendRequest(
+    getRequestConfig(API_END_POINTS.READ_ORDERS, {
+      url: String(),
+      method: REQUEST_METHODS.GET,
+      baseURL: processEnv.BASE_URL,
+      headers: {
+        authorization: `Bearer ${token}`,
+        'content-type': 'application/json'
+      },
+      params: {},
+      data: {}
     })
   );
 }

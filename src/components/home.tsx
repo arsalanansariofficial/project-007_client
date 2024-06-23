@@ -4,6 +4,7 @@ import { RESPONSE_STATUS } from '@/lib/constants';
 import { state_authenticated_user } from '@/lib/state';
 import { loginUser as loginAction } from '@/lib/actions';
 import { App_Authenticated_User, App_Exception } from '@/lib/types';
+import { useEffect } from 'react';
 
 export type App_Home = {
   loginUser: typeof loginAction;
@@ -14,9 +15,9 @@ export default function Home({ loginUser }: App_Home) {
 
   const exception = state as App_Exception;
   const user = state as App_Authenticated_User;
-  const hasError = !(
-    (state as App_Exception).status === RESPONSE_STATUS.OK.status
-  );
+  const hasError = !(exception.status === RESPONSE_STATUS.OK.status);
+
+  if (user && user.jwt) sessionStorage.setItem('user', JSON.stringify(user));
 
   return (
     <main>

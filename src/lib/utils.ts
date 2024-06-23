@@ -23,6 +23,9 @@ export function getRequestConfig(identifier: number, request: App_Request) {
     case API_END_POINTS.READ_ORDER:
       url = `/orders/${request.params.id}?populate=*`;
       break;
+    case API_END_POINTS.READ_ORDERS:
+      url = `/orders?populate=*`;
+      break;
     case API_END_POINTS.CREATE_ORDER:
       url = '/orders';
       break;
