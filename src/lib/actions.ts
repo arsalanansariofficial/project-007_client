@@ -4,12 +4,7 @@ import processEnv from '../../next-env';
 import { API_END_POINTS } from './enums';
 import { getRequestConfig } from './utils';
 import { REQUEST_BODY, REQUEST_METHODS, RESPONSE_STATUS } from './constants';
-import {
-  App_Admin,
-  App_Authenticated_User,
-  App_Exception,
-  App_Request
-} from './types';
+import { App_Request, App_Exception, App_Authenticated_User } from './types';
 
 export async function sendRequest(request: App_Request) {
   try {
@@ -55,10 +50,7 @@ export async function loginUser(
   )) as App_Authenticated_User | App_Exception;
 }
 
-export async function loginAdmin(
-  _state: any,
-  formdata: FormData
-) {
+export async function loginAdmin(_state: any, formdata: FormData) {
   const email = formdata.get(REQUEST_BODY.USER_AUTHENTICATION.identifier);
   const password = formdata.get(REQUEST_BODY.USER_AUTHENTICATION.password);
 
@@ -70,20 +62,18 @@ export async function loginAdmin(
       status: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.status
     } as App_Exception;
 
-  return (
-    await sendRequest(
-      getRequestConfig(API_END_POINTS.LOGIN_ADMIN, {
-        url: String(),
-        method: REQUEST_METHODS.POST,
-        baseURL: processEnv.BASE_URL,
-        headers: {},
-        params: {},
-        data: {
-          email,
-          password
-        }
-      })
-    )
+  return await sendRequest(
+    getRequestConfig(API_END_POINTS.LOGIN_ADMIN, {
+      url: String(),
+      method: REQUEST_METHODS.POST,
+      baseURL: processEnv.BASE_URL,
+      headers: {},
+      params: {},
+      data: {
+        email,
+        password
+      }
+    })
   );
 }
 
@@ -91,13 +81,12 @@ export async function getSales(_state: any, formdata: FormData) {
   const token = formdata.get('token') as string;
 
   return await sendRequest(
-    getRequestConfig(API_END_POINTS.READ_ORDERS, {
+    getRequestConfig(API_END_POINTS.READ_ORDERS_ADMIN, {
       url: String(),
       method: REQUEST_METHODS.GET,
       baseURL: processEnv.BASE_URL,
       headers: {
-        authorization: `Bearer ${token}`,
-        'content-type': 'application/json'
+        authorization: `Bearer ${token}`
       },
       params: {},
       data: {}

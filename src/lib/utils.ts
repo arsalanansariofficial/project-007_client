@@ -29,6 +29,9 @@ export function getRequestConfig(identifier: number, request: App_Request) {
     case API_END_POINTS.READ_ORDERS:
       url = `/orders?populate=*`;
       break;
+    case API_END_POINTS.READ_ORDERS_ADMIN:
+      url = '/content-manager/collection-types/api::order.order';
+      break;
     case API_END_POINTS.CREATE_ORDER:
       url = '/api/orders';
       break;

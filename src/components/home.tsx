@@ -1,5 +1,6 @@
 'use client';
 import { useFormState } from 'react-dom';
+import { useRouter } from 'next/navigation';
 import { RESPONSE_STATUS } from '@/lib/constants';
 import { App_Admin, App_Exception } from '@/lib/types';
 import { loginAdmin as loginAdminAction } from '@/lib/actions';
@@ -11,11 +12,15 @@ export type App_Home = {
 export default function Home({ loginAdmin }: App_Home) {
   const [state, formAction] = useFormState(loginAdmin, {});
 
+  const router = useRouter();
   const exception = state as App_Exception;
   const user = state?.data as App_Admin;
   const hasError = !(exception.status === RESPONSE_STATUS.OK.status);
 
-  if (user && user.token) sessionStorage.setItem('user', JSON.stringify(user));
+  if (user && user.token) {
+    sessionStorage.setItem('user', JSON.stringify(user));
+    router.push('/dashboard');
+  }
 
   return (
     <main>

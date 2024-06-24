@@ -38,6 +38,6 @@ Project based on **Next.js** & **Tailwind CSS**, just a rather simple E-commerce
 
 - For testing some `api` functionality or `server actions` functionality.
 
-- Just rename the file `babel.config.test.json` to `babel.config.json` for the testing environment setup.
+- Just rename the file `.babelrc.test` to `.babelrc` for the testing environment setup.
 
-- Once you are done with testing you can rename the `babel.config.json` file to `babel.config.test.json`.
+- Once you are done with testing you can rename the `.babelrc` file to `.babelrc.test`.
