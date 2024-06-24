@@ -6,16 +6,19 @@ export function getRequestConfig(identifier: number, request: App_Request) {
 
   switch (identifier) {
     case API_END_POINTS.LOGIN:
-      url = '/auth/local';
+      url = '/api/auth/local';
+      break;
+    case API_END_POINTS.LOGIN_ADMIN:
+      url = '/admin/login';
       break;
     case API_END_POINTS.REGISTER:
-      url = '/auth/local/register';
+      url = '/api/auth/local/register';
       break;
     case API_END_POINTS.READ_USER:
-      url = '/users/me?populate[orders][populate][products]=*';
+      url = '/api/users/me?populate[orders][populate][products]=*';
       break;
     case API_END_POINTS.READ_PRODUCTS:
-      url = '/products?populate=*';
+      url = '/api/products?populate=*';
       break;
     case API_END_POINTS.READ_PRODUCT:
       url = `/products/${request.params.id}?populate=*`;
@@ -27,13 +30,13 @@ export function getRequestConfig(identifier: number, request: App_Request) {
       url = `/orders?populate=*`;
       break;
     case API_END_POINTS.CREATE_ORDER:
-      url = '/orders';
+      url = '/api/orders';
       break;
     case API_END_POINTS.READ_DOWNLOAD:
       url = `/download-verifications/${request.params.id}`;
       break;
     default:
-      url = '/products?populate=*';
+      url = '/api/products?populate=*';
   }
 
   request.url = url;

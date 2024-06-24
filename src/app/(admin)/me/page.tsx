@@ -1,6 +1,6 @@
 import './main.css';
 import Home from '@/components/home';
-import { loginUser } from '@/lib/actions';
+import { loginAdmin, loginUser } from '@/lib/actions';
 
 export const metadata = {
   title: 'Project 007',
@@ -8,5 +8,5 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  return <Home loginUser={loginUser} />;
+  return <Home loginAdmin={loginAdmin} />;
 }

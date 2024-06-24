@@ -15,3 +15,19 @@ export const state_authenticated_user = {
     updatedAt: String()
   }
 };
+
+export const state_admin = {
+  token: String(),
+  user: {
+    id: Number(0),
+    email: String(),
+    lastname: String(),
+    firstname: String(),
+    createdAt: String(),
+    updatedAt: String(),
+    username: Object(null),
+    blocked: Boolean(false),
+    isActive: Boolean(true),
+    preferedLanguage: Object(null)
+  }
+};

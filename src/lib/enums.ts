@@ -1,5 +1,6 @@
 export enum API_END_POINTS {
   LOGIN,
+  LOGIN_ADMIN,
   LOGOUT,
   REGISTER,
   READ_USER,

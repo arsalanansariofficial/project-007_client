@@ -35,3 +35,19 @@ export type App_Authenticated_User = {
   jwt: string;
   user: App_User;
 };
+
+export type App_Admin = {
+  token: string;
+  user: {
+    id: number;
+    email: string;
+    lastname: string;
+    blocked: boolean;
+    isActive: boolean;
+    firstname: string;
+    createdAt: string;
+    updatedAt: string;
+    username: string | null;
+    preferedLanguage: string | null;
+  };
+};
