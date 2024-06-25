@@ -51,3 +51,32 @@ export type App_Admin = {
     preferedLanguage: string | null;
   };
 };
+
+export type App_Author = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  username: string | null;
+};
+
+export type App_Order = {
+  id: number;
+  user: App_User;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  createdBy: App_Author;
+  updatedBy: App_Author;
+  pricePaidInCents: number;
+  products: { count: string };
+};
+
+export type App_Response = {
+  results: any;
+  pagination: {
+    page: number;
+    pageSize: number;
+    pageCount: number;
+    total: number;
+  };
+};
