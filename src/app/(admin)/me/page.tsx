@@ -1,4 +1,3 @@
-import './main.css';
 import Home from '@/components/home';
 import { loginAdmin, loginUser } from '@/lib/actions';
 

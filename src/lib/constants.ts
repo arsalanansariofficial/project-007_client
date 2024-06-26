@@ -1,8 +1,27 @@
+export const IDENTIFIERS = {
+  USER: 'USER',
+  TOKEN: 'TOKEN'
+};
+
 export const REQUEST_METHODS = {
   GET: 'GET',
   PUT: 'PUT',
   POST: 'POST',
   DELETE: 'DELETE'
+};
+
+export const ROUTES = {
+  SALES: '/sales',
+  ORDERS: '/orders',
+  PRODUCTS: '/products',
+  DASHBOARD: '/dashboard'
+};
+
+export const REQUEST_BODY = {
+  USER_AUTHENTICATION: {
+    password: 'password',
+    identifier: 'identifier'
+  }
 };
 
 export const RESPONSE_STATUS = {
@@ -18,23 +37,4 @@ export const RESPONSE_STATUS = {
     status: 500,
     text: 'Internal Server Error'
   }
-};
-
-export const REQUEST_BODY = {
-  USER_AUTHENTICATION: {
-    identifier: 'identifier',
-    password: 'password'
-  }
-};
-
-export const IDENTIFIERS = {
-  USER: 'USER',
-  TOKEN: 'TOKEN'
-};
-
-export const ROUTES = {
-  SALES: '/sales',
-  ORDERS: '/orders',
-  PRODUCTS: '/products',
-  DASHBOARD: '/dashboard'
 };

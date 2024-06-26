@@ -2,7 +2,7 @@
 import axios from 'axios';
 import processEnv from '../../next-env';
 import { API_END_POINTS } from './enums';
-import { getRequestConfig } from './utils';
+import { getRequestConfig, retrieveObject } from './utils';
 import { App_Request, App_Exception, App_Authenticated_User } from './types';
 import {
   IDENTIFIERS,
@@ -93,6 +93,19 @@ export async function getSales(_state: any, formdata: FormData) {
       headers: {
         authorization: `Bearer ${token}`
       },
+      params: {},
+      data: {}
+    })
+  );
+}
+
+export async function getProducts() {
+  return await sendRequest(
+    getRequestConfig(API_END_POINTS.READ_PRODUCTS, {
+      url: String(),
+      method: REQUEST_METHODS.GET,
+      baseURL: processEnv.BASE_URL,
+      headers: {},
       params: {},
       data: {}
     })
