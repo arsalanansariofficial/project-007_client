@@ -29,9 +29,12 @@ export const REQUEST_BODY = {
 
 export const IDENTIFIERS = {
   USER: 'USER',
-  TOKEN: 'TOKEN',
+  TOKEN: 'TOKEN'
 };
 
 export const ROUTES = {
-  DASHBOARD: '/dashboard',
+  SALES: '/sales',
+  ORDERS: '/orders',
+  PRODUCTS: '/products',
+  DASHBOARD: '/dashboard'
 };

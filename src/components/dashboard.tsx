@@ -2,8 +2,9 @@
 import { getSales } from '@/lib/actions';
 import { useEffect, useState } from 'react';
 import { retrieveObject } from '@/lib/utils';
-import { IDENTIFIERS } from '@/lib/constants';
+import { IDENTIFIERS, ROUTES } from '@/lib/constants';
 import { App_Admin, App_Order, App_Response, App_User } from '@/lib/types';
+import Link from 'next/link';
 
 export type App_Dashboard = {
   getSales: typeof getSales;
@@ -45,14 +46,31 @@ export default function Dashboard({ getSales }: App_Dashboard) {
   }, []);
 
   return (
-    <main>
-      <h1>Dashboard</h1>
-      <p>sales: {sales}</p>
-      <p>orders: {orders.length}</p>
-      <p>average value: {averageValue}</p>
-      <p>customers: {customers.length}</p>
-      <p>products: {products.length}</p>
-      <p>inactive products: {inactiveProducts.length}</p>
-    </main>
+    <>
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <Link href={ROUTES.SALES}>Sales</Link>
+            </li>
+            <li>
+              <Link href={ROUTES.PRODUCTS}>Products</Link>
+            </li>
+            <li>
+              <Link href={ROUTES.ORDERS}>Orders</Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <h1>Dashboard</h1>
+        <p>sales: {sales}</p>
+        <p>orders: {orders.length}</p>
+        <p>average value: {averageValue}</p>
+        <p>customers: {customers.length}</p>
+        <p>products: {products.length}</p>
+        <p>inactive products: {inactiveProducts.length}</p>
+      </main>
+    </>
   );
 }
