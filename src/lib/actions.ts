@@ -3,8 +3,13 @@ import axios from 'axios';
 import processEnv from '../../next-env';
 import { API_END_POINTS } from './enums';
 import { getRequestConfig } from './utils';
-import { REQUEST_BODY, REQUEST_METHODS, RESPONSE_STATUS } from './constants';
 import { App_Request, App_Exception, App_Authenticated_User } from './types';
+import {
+  IDENTIFIERS,
+  REQUEST_BODY,
+  RESPONSE_STATUS,
+  REQUEST_METHODS
+} from './constants';
 
 export async function sendRequest(request: App_Request) {
   try {
@@ -78,7 +83,7 @@ export async function loginAdmin(_state: any, formdata: FormData) {
 }
 
 export async function getSales(_state: any, formdata: FormData) {
-  const token = formdata.get('token') as string;
+  const token = formdata.get(IDENTIFIERS.TOKEN) as string;
 
   return await sendRequest(
     getRequestConfig(API_END_POINTS.READ_ORDERS_ADMIN, {

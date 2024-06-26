@@ -1,6 +1,14 @@
 import { App_Request } from './types';
 import { API_END_POINTS } from './enums';
 
+export function storeObject(identifier: string, value: any) {
+  sessionStorage.setItem(identifier, JSON.stringify(value));
+}
+
+export function retrieveObject<T>(identifier: string) {
+  return JSON.parse(sessionStorage.getItem(identifier)!) as T;
+}
+
 export function getRequestConfig(identifier: number, request: App_Request) {
   let url;
 

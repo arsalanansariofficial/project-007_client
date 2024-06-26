@@ -26,3 +26,12 @@ export const REQUEST_BODY = {
     password: 'password'
   }
 };
+
+export const IDENTIFIERS = {
+  USER: 'USER',
+  TOKEN: 'TOKEN',
+};
+
+export const ROUTES = {
+  DASHBOARD: '/dashboard',
+};

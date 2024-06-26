@@ -1,7 +1,9 @@
 'use client';
-import { App_Admin, App_Order, App_Response, App_User } from '@/lib/types';
 import { getSales } from '@/lib/actions';
 import { useEffect, useState } from 'react';
+import { retrieveObject } from '@/lib/utils';
+import { IDENTIFIERS } from '@/lib/constants';
+import { App_Admin, App_Order, App_Response, App_User } from '@/lib/types';
 
 export type App_Dashboard = {
   getSales: typeof getSales;
@@ -16,11 +18,10 @@ export default function Dashboard({ getSales }: App_Dashboard) {
   const [inactiveProducts, setInactiveProducts] = useState([]);
 
   useEffect(function () {
-    const token = (JSON.parse(sessionStorage.getItem('user')!) as App_Admin)
-      .token;
+    const token = retrieveObject<App_Admin>(IDENTIFIERS.USER).token;
 
     const formdata = new FormData();
-    formdata.set('token', token as string);
+    formdata.set(IDENTIFIERS.TOKEN, token as string);
 
     getSales(null, formdata).then((response: App_Response) => {
       let sales = 0;
@@ -47,9 +48,11 @@ export default function Dashboard({ getSales }: App_Dashboard) {
     <main>
       <h1>Dashboard</h1>
       <p>sales: {sales}</p>
-      <p>customers: {customers.length}</p>
-      <p>average value: {averageValue}</p>
       <p>orders: {orders.length}</p>
+      <p>average value: {averageValue}</p>
+      <p>customers: {customers.length}</p>
+      <p>products: {products.length}</p>
+      <p>inactive products: {inactiveProducts.length}</p>
     </main>
   );
 }

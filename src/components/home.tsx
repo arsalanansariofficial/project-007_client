@@ -1,7 +1,8 @@
 'use client';
 import { useFormState } from 'react-dom';
+import { storeObject } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
-import { RESPONSE_STATUS } from '@/lib/constants';
+import { IDENTIFIERS, RESPONSE_STATUS, ROUTES } from '@/lib/constants';
 import { App_Admin, App_Exception } from '@/lib/types';
 import { loginAdmin as loginAdminAction } from '@/lib/actions';
 
@@ -18,8 +19,8 @@ export default function Home({ loginAdmin }: App_Home) {
   const hasError = !(exception.status === RESPONSE_STATUS.OK.status);
 
   if (user && user.token) {
-    sessionStorage.setItem('user', JSON.stringify(user));
-    router.push('/dashboard');
+    storeObject(IDENTIFIERS.USER, user);
+    router.push(ROUTES.DASHBOARD);
   }
 
   return (
@@ -27,8 +28,8 @@ export default function Home({ loginAdmin }: App_Home) {
       <h1>Home Page</h1>
       <form action={formAction}>
         {hasError && exception.status}
-        {exception && exception.message}
-        {user && user.token} {user && user.user && user.user.email}
+        {exception?.message}
+        {user?.token} {user?.user?.email}
         <input type="text" name="identifier" placeholder="Email" />
         <input type="password" name="password" placeholder="password" />
         <button type="submit">Login</button>
