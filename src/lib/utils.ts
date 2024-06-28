@@ -19,6 +19,9 @@ export function getRequestConfig(identifier: number, request: App_Request) {
     case API_END_POINTS.LOGIN_ADMIN:
       url = '/admin/login';
       break;
+    case API_END_POINTS.UPDATE_PRODUCT_ADMIN:
+      url = `/content-manager/collection-types/api::product.product/${request.params.id}`;
+      break;
     case API_END_POINTS.REGISTER:
       url = '/api/auth/local/register';
       break;

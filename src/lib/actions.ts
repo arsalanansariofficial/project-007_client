@@ -3,7 +3,14 @@ import axios from 'axios';
 import processEnv from '../../next-env';
 import { API_END_POINTS } from './enums';
 import { getRequestConfig, retrieveObject } from './utils';
-import { App_Request, App_Exception, App_Authenticated_User } from './types';
+import {
+  App_Request,
+  App_Exception,
+  App_Authenticated_User,
+  App_Product_Public,
+  App_Response_Data_Public,
+  App_Response_File
+} from './types';
 import {
   IDENTIFIERS,
   REQUEST_BODY,
@@ -113,7 +120,7 @@ export async function getProducts() {
 }
 
 export async function getProduct(id: string) {
-  console.log(
+  return await sendRequest(
     getRequestConfig(API_END_POINTS.READ_PRODUCT, {
       url: String(),
       method: REQUEST_METHODS.GET,
@@ -123,15 +130,39 @@ export async function getProduct(id: string) {
       data: {}
     })
   );
+}
+
+export async function updateProductAdmin(
+  token: string,
+  product: App_Product_Public,
+  images: App_Response_Data_Public<App_Response_File>[],
+  formdata: FormData
+) {
+  const name = String(formdata.get('product-name'));
+  const priceInCents = Number(formdata.get('product-price'));
+  const description = String(formdata.get('product-description'));
+  const isAvailableForPurchase = Boolean(formdata.get('product-availability'));
+  const newProduct = {
+    ...product,
+    ...product.attributes,
+    imagePath: undefined,
+    name: name || product.attributes.name,
+    description: description || product.attributes.description,
+    priceInCents: priceInCents || product.attributes.priceInCents,
+    isAvailableForPurchase:
+      isAvailableForPurchase || product.attributes.isAvailableForPurchase
+  };
 
   return await sendRequest(
-    getRequestConfig(API_END_POINTS.READ_PRODUCT, {
+    getRequestConfig(API_END_POINTS.UPDATE_PRODUCT_ADMIN, {
       url: String(),
-      method: REQUEST_METHODS.GET,
+      method: REQUEST_METHODS.PUT,
       baseURL: processEnv.BASE_URL,
-      headers: {},
-      params: { id },
-      data: {}
+      headers: {
+        authorization: `Bearer ${token}`
+      },
+      params: { id: product.id },
+      data: newProduct
     })
   );
 }
