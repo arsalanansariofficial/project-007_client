@@ -1,10 +1,12 @@
-import Link from "next/link";
-import { ROUTES } from "@/lib/constants";
+import Link from 'next/link';
+import { ROUTES } from '@/lib/constants';
 
 export default function Header() {
   return (
     <header>
-      <h1>Dashboard</h1>
+      <Link href={ROUTES.DASHBOARD}>
+        <h1>Dashboard</h1>
+      </Link>
       <nav>
         <ul>
           <li>

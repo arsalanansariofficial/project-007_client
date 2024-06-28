@@ -13,7 +13,7 @@ export const REQUEST_METHODS = {
 export const ROUTES = {
   SALES: '/sales',
   ORDERS: '/orders',
-  PRODUCTS: '/products',
+  PRODUCTS: '/products/',
   DASHBOARD: '/dashboard'
 };
 

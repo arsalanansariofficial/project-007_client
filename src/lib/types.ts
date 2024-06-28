@@ -101,7 +101,7 @@ export type App_Response_File = {
 };
 
 export type App_Product_Public = App_Response_Data_Public<{
-  name: number;
+  name: string;
   createdAt: string;
   updatedAt: string;
   description: string;

@@ -93,10 +93,13 @@ export default function Dashboard({ getSales }: App_Dashboard) {
         retrieveObject<App_Admin>(IDENTIFIERS.USER)?.token as string
       );
 
-      const [salesResponse, productsResponse]: [
+      const [salesResponse, productsResponse] = (await Promise.all([
+        getSales(null, formdata),
+        getProducts()
+      ])) as [
         App_Response<App_Order[]> | App_Exception,
         App_Response_Public<App_Product_Public[]> | App_Exception
-      ] = await Promise.all([getSales(null, formdata), getProducts()]);
+      ];
 
       handleException(salesResponse, productsResponse);
       handleSales(salesResponse);
