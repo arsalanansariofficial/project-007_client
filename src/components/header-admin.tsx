@@ -10,6 +10,9 @@ export default function Header() {
       <nav>
         <ul>
           <li>
+            <Link href={ROUTES.ME}>Me</Link>
+          </li>
+          <li>
             <Link href={ROUTES.SALES}>Sales</Link>
           </li>
           <li>

@@ -111,3 +111,27 @@ export async function getProducts() {
     })
   );
 }
+
+export async function getProduct(id: string) {
+  console.log(
+    getRequestConfig(API_END_POINTS.READ_PRODUCT, {
+      url: String(),
+      method: REQUEST_METHODS.GET,
+      baseURL: processEnv.BASE_URL,
+      headers: {},
+      params: { id },
+      data: {}
+    })
+  );
+
+  return await sendRequest(
+    getRequestConfig(API_END_POINTS.READ_PRODUCT, {
+      url: String(),
+      method: REQUEST_METHODS.GET,
+      baseURL: processEnv.BASE_URL,
+      headers: {},
+      params: { id },
+      data: {}
+    })
+  );
+}

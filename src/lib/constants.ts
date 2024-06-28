@@ -11,6 +11,7 @@ export const REQUEST_METHODS = {
 };
 
 export const ROUTES = {
+  ME: '/me',
   SALES: '/sales',
   ORDERS: '/orders',
   PRODUCTS: '/products/',

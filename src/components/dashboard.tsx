@@ -1,5 +1,6 @@
 'use client';
-import { Each, Show } from '@/lib/views';
+import { Show } from '@/lib/views';
+import Exception from './exception';
 import { useEffect, useState } from 'react';
 import { retrieveObject } from '@/lib/utils';
 import { IDENTIFIERS } from '@/lib/constants';
@@ -23,8 +24,8 @@ export default function Dashboard({ getSales }: App_Dashboard) {
   const [averageValue, setAverageValue] = useState(0);
   const [orders, setOrders] = useState<App_Order[]>([]);
   const [customers, setCustomers] = useState<App_User[]>([]);
-  const [exception, setException] = useState<App_Exception>();
   const [products, setProducts] = useState<App_Product_Public[]>([]);
+  const [exception, setException] = useState<App_Exception | null>(null);
   const [inactiveProducts, setInactiveProducts] = useState<
     App_Product_Public[]
   >([]);
@@ -39,7 +40,12 @@ export default function Dashboard({ getSales }: App_Dashboard) {
 
     if (salesException.status) exception = salesException;
     if (productsException.status) exception = productsException;
-    if (exception?.status) return setException(exception);
+    if (exception?.status) {
+      setException(exception);
+      return true;
+    }
+
+    return false;
   }
 
   function handleSales(
@@ -101,7 +107,8 @@ export default function Dashboard({ getSales }: App_Dashboard) {
         App_Response_Public<App_Product_Public[]> | App_Exception
       ];
 
-      handleException(salesResponse, productsResponse);
+      if (handleException(salesResponse, productsResponse)) return;
+      
       handleSales(salesResponse);
       handleProducts(productsResponse);
     }
@@ -113,18 +120,7 @@ export default function Dashboard({ getSales }: App_Dashboard) {
     <main>
       <Show>
         <Show.When isTrue={!!exception}>
-          <p>{exception?.status}</p>
-          <p>{exception?.message}</p>
-          <Show>
-            <Show.When isTrue={!!exception?.details.errors?.length}>
-              <Each
-                of={exception?.details.errors!}
-                render={function (exception, index) {
-                  return <p key={index}>{exception.message}</p>;
-                }}
-              />
-            </Show.When>
-          </Show>
+          <Exception exception={exception} />
         </Show.When>
         <Show.Else>
           <p>sales: {sales}</p>

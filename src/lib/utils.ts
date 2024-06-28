@@ -29,13 +29,13 @@ export function getRequestConfig(identifier: number, request: App_Request) {
       url = '/api/products?populate=*';
       break;
     case API_END_POINTS.READ_PRODUCT:
-      url = `/products/${request.params.id}?populate=*`;
+      url = `/api/products/${request.params.id}?populate=*`;
       break;
     case API_END_POINTS.READ_ORDER:
-      url = `/orders/${request.params.id}?populate=*`;
+      url = `/api/orders/${request.params.id}?populate=*`;
       break;
     case API_END_POINTS.READ_ORDERS:
-      url = `/orders?populate=*`;
+      url = `/api/orders?populate=*`;
       break;
     case API_END_POINTS.READ_ORDERS_ADMIN:
       url = '/content-manager/collection-types/api::order.order';
@@ -44,7 +44,7 @@ export function getRequestConfig(identifier: number, request: App_Request) {
       url = '/api/orders';
       break;
     case API_END_POINTS.READ_DOWNLOAD:
-      url = `/download-verifications/${request.params.id}`;
+      url = `/api/download-verifications/${request.params.id}`;
       break;
     default:
       url = '/api/products?populate=*';

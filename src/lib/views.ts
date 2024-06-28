@@ -30,6 +30,7 @@ export function Each<T>({ of, render }: App_Each<T>) {
 export function Show(props: App_Show) {
   let when: any = null;
   let otherwise: any = null;
+  
   Children.forEach(props.children, function (children) {
     if (children.props.isTrue === undefined) otherwise = children;
     if (!when && children.props.isTrue) when = children;
