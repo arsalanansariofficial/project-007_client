@@ -1,6 +1,13 @@
+export const BOOLEAN = {
+  TRUE: 'true',
+  FALSE: 'false'
+};
+
 export const IDENTIFIERS = {
   USER: 'USER',
-  TOKEN: 'TOKEN'
+  TOKEN: 'TOKEN',
+  AVAILABLE: 'AVAILABLE',
+  NOT_AVAILABLE: 'NOT_AVAILABLE'
 };
 
 export const REQUEST_METHODS = {

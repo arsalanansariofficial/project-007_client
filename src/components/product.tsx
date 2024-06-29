@@ -1,17 +1,17 @@
 'use client';
 import Link from 'next/link';
+import Button from './button';
 import { Each } from '@/lib/views';
-import { IDENTIFIERS, ROUTES } from '@/lib/constants';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { retrieveObject } from '@/lib/utils';
 import { updateProductAdmin } from '@/lib/actions';
+import { IDENTIFIERS, ROUTES } from '@/lib/constants';
 import {
+  App_Admin,
   App_Response_File,
   App_Product_Public,
-  App_Response_Data_Public,
-  App_Admin
+  App_Response_Data_Public
 } from '@/lib/types';
-import { useFormState } from 'react-dom';
-import { retrieveObject } from '@/lib/utils';
 
 type App_Product_Component = {
   baseURL: string;
@@ -140,7 +140,7 @@ export default function Product({
         <button type="button" onClick={toggleMediaLib}>
           Media Library
         </button>
-        <button type="submit">Update Product</button>
+        <Button fallback='Applying...' type='submit' text='Apply Changes'/>
       </form>
     </div>
   );

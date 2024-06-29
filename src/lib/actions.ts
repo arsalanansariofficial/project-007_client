@@ -2,7 +2,9 @@
 import axios from 'axios';
 import processEnv from '../../next-env';
 import { API_END_POINTS } from './enums';
-import { getRequestConfig, retrieveObject } from './utils';
+import { getRequestConfig } from './utils';
+import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import {
   App_Request,
   App_Exception,
@@ -15,7 +17,9 @@ import {
   IDENTIFIERS,
   REQUEST_BODY,
   RESPONSE_STATUS,
-  REQUEST_METHODS
+  REQUEST_METHODS,
+  BOOLEAN,
+  ROUTES
 } from './constants';
 
 export async function sendRequest(request: App_Request) {
@@ -141,19 +145,18 @@ export async function updateProductAdmin(
   const name = String(formdata.get('product-name'));
   const priceInCents = Number(formdata.get('product-price'));
   const description = String(formdata.get('product-description'));
-  const isAvailableForPurchase = Boolean(formdata.get('product-availability'));
+  const isAvailableForPurchase =
+    String(formdata.get('product-availability')) === BOOLEAN.TRUE;
   const newProduct = {
-    ...product,
     ...product.attributes,
-    imagePath: undefined,
+    isAvailableForPurchase,
     name: name || product.attributes.name,
     description: description || product.attributes.description,
     priceInCents: priceInCents || product.attributes.priceInCents,
-    isAvailableForPurchase:
-      isAvailableForPurchase || product.attributes.isAvailableForPurchase
+    imagePath: images.map(file => ({ ...file, ...file.attributes }))
   };
 
-  return await sendRequest(
+  await sendRequest(
     getRequestConfig(API_END_POINTS.UPDATE_PRODUCT_ADMIN, {
       url: String(),
       method: REQUEST_METHODS.PUT,
@@ -165,4 +168,7 @@ export async function updateProductAdmin(
       data: newProduct
     })
   );
+
+  revalidatePath(ROUTES.PRODUCTS);
+  return redirect(ROUTES.PRODUCTS);
 }

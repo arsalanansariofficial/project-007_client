@@ -29,10 +29,10 @@ export function getRequestConfig(identifier: number, request: App_Request) {
       url = '/api/users/me?populate[orders][populate][products]=*';
       break;
     case API_END_POINTS.READ_PRODUCTS:
-      url = '/api/products?populate=*';
+      url = '/api/products?populate[imagePath]=*';
       break;
     case API_END_POINTS.READ_PRODUCT:
-      url = `/api/products/${request.params.id}?populate=*`;
+      url = `/api/products/${request.params.id}?populate[imagePath]=*`;
       break;
     case API_END_POINTS.READ_ORDER:
       url = `/api/orders/${request.params.id}?populate=*`;

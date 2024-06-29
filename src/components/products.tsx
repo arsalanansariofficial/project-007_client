@@ -1,7 +1,8 @@
-import Product from './product';
+import Link from 'next/link';
 import Exception from './exception';
 import { Show, Each } from '@/lib/views';
 import { getProducts } from '@/lib/actions';
+import { IDENTIFIERS, ROUTES } from '@/lib/constants';
 import {
   App_Exception,
   App_Product_Public,
@@ -33,7 +34,38 @@ export default async function Products({ baseURL }: App_Products_Component) {
             of={products}
             render={function (product) {
               return (
-                <Product key={product.id} product={product} baseURL={baseURL} />
+                <main>
+                  <Each
+                    of={product.attributes.imagePath.data}
+                    render={function (image) {
+                      return (
+                        <Link href={ROUTES.PRODUCTS + product.id}>
+                          <img
+                            width={200}
+                            height={200}
+                            key={image.id}
+                            alt={product.attributes.description}
+                            src={baseURL + image.attributes.url}
+                          />
+                        </Link>
+                      );
+                    }}
+                  />
+                  <p>Product Id: {product.id}</p>
+                  <h3>{product.attributes.name}</h3>
+                  <p>{product.attributes.description}</p>
+                  <p>Rs. {product.attributes.priceInCents}</p>
+                  <Show>
+                    <Show.When
+                      isTrue={product.attributes.isAvailableForPurchase}
+                    >
+                      <p>{IDENTIFIERS.AVAILABLE}</p>
+                    </Show.When>
+                    <Show.Else>
+                      <p>{IDENTIFIERS.NOT_AVAILABLE}</p>
+                    </Show.Else>
+                  </Show>
+                </main>
               );
             }}
           />
