@@ -17,7 +17,7 @@ import {
   IDENTIFIERS,
   REQUEST_BODY,
   RESPONSE_STATUS,
-  REQUEST_METHODS,
+  REQUEST_LOGINTHODS,
   BOOLEAN,
   ROUTES
 } from './constants';
@@ -54,7 +54,7 @@ export async function loginUser(
   return (await sendRequest(
     getRequestConfig(API_END_POINTS.LOGIN, {
       url: String(),
-      method: REQUEST_METHODS.POST,
+      method: REQUEST_LOGINTHODS.POST,
       baseURL: processEnv.BASE_URL,
       headers: { 'content-type': 'application/json' },
       params: {},
@@ -81,7 +81,7 @@ export async function loginAdmin(_state: any, formdata: FormData) {
   return await sendRequest(
     getRequestConfig(API_END_POINTS.LOGIN_ADMIN, {
       url: String(),
-      method: REQUEST_METHODS.POST,
+      method: REQUEST_LOGINTHODS.POST,
       baseURL: processEnv.BASE_URL,
       headers: {},
       params: {},
@@ -99,7 +99,7 @@ export async function getSales(_state: any, formdata: FormData) {
   return await sendRequest(
     getRequestConfig(API_END_POINTS.READ_ORDERS_ADMIN, {
       url: String(),
-      method: REQUEST_METHODS.GET,
+      method: REQUEST_LOGINTHODS.GET,
       baseURL: processEnv.BASE_URL,
       headers: {
         authorization: `Bearer ${token}`
@@ -114,7 +114,7 @@ export async function getProducts() {
   return await sendRequest(
     getRequestConfig(API_END_POINTS.READ_PRODUCTS, {
       url: String(),
-      method: REQUEST_METHODS.GET,
+      method: REQUEST_LOGINTHODS.GET,
       baseURL: processEnv.BASE_URL,
       headers: {},
       params: {},
@@ -127,7 +127,7 @@ export async function getProduct(id: string) {
   return await sendRequest(
     getRequestConfig(API_END_POINTS.READ_PRODUCT, {
       url: String(),
-      method: REQUEST_METHODS.GET,
+      method: REQUEST_LOGINTHODS.GET,
       baseURL: processEnv.BASE_URL,
       headers: {},
       params: { id },
@@ -159,7 +159,7 @@ export async function updateProductAdmin(
   await sendRequest(
     getRequestConfig(API_END_POINTS.UPDATE_PRODUCT_ADMIN, {
       url: String(),
-      method: REQUEST_METHODS.PUT,
+      method: REQUEST_LOGINTHODS.PUT,
       baseURL: processEnv.BASE_URL,
       headers: {
         authorization: `Bearer ${token}`

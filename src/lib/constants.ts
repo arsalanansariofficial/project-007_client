@@ -10,7 +10,7 @@ export const IDENTIFIERS = {
   NOT_AVAILABLE: 'NOT_AVAILABLE'
 };
 
-export const REQUEST_METHODS = {
+export const REQUEST_LOGINTHODS = {
   GET: 'GET',
   PUT: 'PUT',
   POST: 'POST',
@@ -18,7 +18,7 @@ export const REQUEST_METHODS = {
 };
 
 export const ROUTES = {
-  ME: '/me',
+  LOGIN: '/login',
   SALES: '/sales',
   ORDERS: '/orders',
   PRODUCTS: '/products/',

@@ -1,13 +1,12 @@
 'use client';
 import Link from 'next/link';
 import Button from './button';
+import { useState } from 'react';
 import { Each } from '@/lib/views';
-import { useEffect, useState } from 'react';
-import { retrieveObject } from '@/lib/utils';
+import { ROUTES } from '@/lib/constants';
 import { updateProductAdmin } from '@/lib/actions';
-import { IDENTIFIERS, ROUTES } from '@/lib/constants';
+import useRouterGuard from '@/hooks/useRouterGuard';
 import {
-  App_Admin,
   App_Response_File,
   App_Product_Public,
   App_Response_Data_Public
@@ -24,8 +23,8 @@ export default function Product({
   baseURL,
   updateProduct
 }: App_Product_Component) {
+  const token = useRouterGuard()?.token!;
   const [isOpen, setIsOpen] = useState(false);
-  const [token, setToken] = useState(String());
   const [mediaIndex, setMediaIndex] = useState(0);
   const [images, setImages] = useState(product.attributes.imagePath.data);
   const [mediaLib, setMediaLib] = useState(product.attributes.imagePath.data);
@@ -40,7 +39,6 @@ export default function Product({
   }
 
   function handleImageUpdate(
-    index: number,
     image: App_Response_Data_Public<App_Response_File>
   ) {
     setIsOpen(false);
@@ -51,10 +49,6 @@ export default function Product({
       return updated;
     });
   }
-
-  useEffect(function () {
-    setToken(retrieveObject<App_Admin>(IDENTIFIERS.USER)?.token as string);
-  }, []);
 
   return (
     <div key={product.id}>
@@ -69,7 +63,7 @@ export default function Product({
                 key={image.id}
                 alt={product.attributes.description}
                 src={baseURL + image.attributes.url}
-                onClick={handleImageUpdate.bind(null, index, image)}
+                onClick={handleImageUpdate.bind(null, image)}
               />
             );
           }}
@@ -140,7 +134,7 @@ export default function Product({
         <button type="button" onClick={toggleMediaLib}>
           Media Library
         </button>
-        <Button fallback='Applying...' type='submit' text='Apply Changes'/>
+        <Button fallback="Applying..." type="submit" text="Apply Changes" />
       </form>
     </div>
   );

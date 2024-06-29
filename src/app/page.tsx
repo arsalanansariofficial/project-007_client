@@ -1,3 +1,10 @@
+import Header from '@/components/header-admin';
+
 export default function HomePage() {
-  return <h1>Home page</h1>;
+  return (
+    <main>
+      <h1>Home Page</h1>
+      <Header />
+    </main>
+  );
 }

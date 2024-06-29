@@ -4,13 +4,15 @@ import { ROUTES } from '@/lib/constants';
 export default function Header() {
   return (
     <header>
-      <Link href={ROUTES.DASHBOARD}>
-        <h1>Dashboard</h1>
-      </Link>
       <nav>
         <ul>
           <li>
-            <Link href={ROUTES.ME}>Me</Link>
+            <Link href={ROUTES.LOGIN}>
+              <h1>Login</h1>
+            </Link>
+          </li>
+          <li>
+            <Link href={ROUTES.DASHBOARD}>Dashboard</Link>
           </li>
           <li>
             <Link href={ROUTES.SALES}>Sales</Link>

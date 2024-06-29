@@ -2,24 +2,24 @@
 import { Show } from '@/lib/views';
 import Exception from './exception';
 import { useEffect, useState } from 'react';
-import { retrieveObject } from '@/lib/utils';
 import { IDENTIFIERS } from '@/lib/constants';
 import { getProducts, getSales } from '@/lib/actions';
 import {
   App_User,
-  App_Admin,
   App_Order,
   App_Response,
   App_Exception,
   App_Product_Public,
   App_Response_Public
 } from '@/lib/types';
+import useRouterGuard from '@/hooks/useRouterGuard';
 
 export type App_Dashboard = {
   getSales: typeof getSales;
 };
 
 export default function Dashboard({ getSales }: App_Dashboard) {
+  const user = useRouterGuard();
   const [sales, setSales] = useState(0);
   const [averageValue, setAverageValue] = useState(0);
   const [orders, setOrders] = useState<App_Order[]>([]);
@@ -90,31 +90,31 @@ export default function Dashboard({ getSales }: App_Dashboard) {
     setInactiveProducts(inactiveProducts);
   }
 
-  useEffect(function () {
-    async function init() {
-      const formdata = new FormData();
+  useEffect(
+    function () {
+      async function init() {
+        const formdata = new FormData();
 
-      formdata.set(
-        IDENTIFIERS.TOKEN,
-        retrieveObject<App_Admin>(IDENTIFIERS.USER)?.token as string
-      );
+        formdata.set(IDENTIFIERS.TOKEN, user?.token as string);
 
-      const [salesResponse, productsResponse] = (await Promise.all([
-        getSales(null, formdata),
-        getProducts()
-      ])) as [
-        App_Response<App_Order[]> | App_Exception,
-        App_Response_Public<App_Product_Public[]> | App_Exception
-      ];
+        const [salesResponse, productsResponse] = (await Promise.all([
+          getSales(null, formdata),
+          getProducts()
+        ])) as [
+          App_Response<App_Order[]> | App_Exception,
+          App_Response_Public<App_Product_Public[]> | App_Exception
+        ];
 
-      if (handleException(salesResponse, productsResponse)) return;
-      
-      handleSales(salesResponse);
-      handleProducts(productsResponse);
-    }
+        if (handleException(salesResponse, productsResponse)) return;
 
-    init();
-  }, []);
+        handleSales(salesResponse);
+        handleProducts(productsResponse);
+      }
+
+      if (user && user.token) init();
+    },
+    [user]
+  );
 
   return (
     <main>

@@ -1,27 +1,23 @@
+'use client';
 import Link from 'next/link';
 import Exception from './exception';
 import { Show, Each } from '@/lib/views';
-import { getProducts } from '@/lib/actions';
+import useRouterGuard from '@/hooks/useRouterGuard';
 import { IDENTIFIERS, ROUTES } from '@/lib/constants';
-import {
-  App_Exception,
-  App_Product_Public,
-  App_Response_Public
-} from '@/lib/types';
+import { App_Exception, App_Product_Public } from '@/lib/types';
 
 type App_Products_Component = {
   baseURL: string;
+  products: App_Product_Public[];
+  exception: App_Exception | null;
 };
 
-type App_Response_Products =
-  | App_Exception
-  | App_Response_Public<App_Product_Public[]>;
-
-export default async function Products({ baseURL }: App_Products_Component) {
-  const response = (await getProducts()) as App_Response_Products;
-  const _exception = response as App_Exception;
-  const exception = _exception.status ? _exception : null;
-  const products = (response as App_Response_Public<App_Product_Public[]>).data;
+export default function Products({
+  baseURL,
+  products,
+  exception
+}: App_Products_Component) {
+  useRouterGuard();
 
   return (
     <main>
