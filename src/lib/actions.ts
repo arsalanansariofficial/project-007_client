@@ -46,9 +46,9 @@ export async function loginUser(
   if (!identifier || !password)
     return {
       details: {},
-      name: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.text,
-      message: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.text,
-      status: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.status
+      name: RESPONSE_STATUS.BAD_REQUEST.text,
+      message: RESPONSE_STATUS.BAD_REQUEST.text,
+      status: RESPONSE_STATUS.BAD_REQUEST.status
     } as App_Exception;
 
   return (await sendRequest(
@@ -73,9 +73,9 @@ export async function loginAdmin(_state: any, formdata: FormData) {
   if (!email || !password)
     return {
       details: {},
-      name: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.text,
-      message: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.text,
-      status: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.status
+      name: RESPONSE_STATUS.BAD_REQUEST.text,
+      message: RESPONSE_STATUS.BAD_REQUEST.text,
+      status: RESPONSE_STATUS.BAD_REQUEST.status
     } as App_Exception;
 
   return await sendRequest(
