@@ -36,12 +36,11 @@ export default function useAuth(sessionTime: number) {
 
   function login(user: App_Admin) {
     const date = new Date();
-    const sessionTimeout = date.getTime() + sessionTime;
-
-    console.log(sessionTimeout, sessionTime, new Date(sessionTimeout).toISOString())
-
+    const sessionTimeInMillis = sessionTime * 1000;
+    const sessionTimeout = date.getTime() + sessionTimeInMillis;
+    
     user.sessionTime = new Date(sessionTimeout).toISOString();
-    timeout.current = setTimeout(logout, sessionTime);
+    timeout.current = setTimeout(logout, sessionTimeInMillis);
     storeObject(IDENTIFIERS.USER, user);
 
     return router.push(ROUTES.DASHBOARD);
