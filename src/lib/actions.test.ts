@@ -4,7 +4,7 @@ import { loginUser, sendRequest } from './actions';
 import { state_authenticated_user } from './state';
 import { describe, expect, test } from '@jest/globals';
 import { App_Authenticated_User, App_Exception } from './types';
-import { REQUEST_BODY, REQUEST_LOGINTHODS, RESPONSE_STATUS } from './constants';
+import { REQUEST_BODY, REQUEST_METHODS, RESPONSE_STATUS } from './constants';
 
 describe('API Module', function () {
   test.skip('Should not login user with invalid credentials', async function () {
@@ -44,7 +44,7 @@ describe('API Module', function () {
       sendRequest(
         getRequestConfig(API_END_POINTS.LOGIN, {
           url: String(),
-          method: REQUEST_LOGINTHODS.POST,
+          method: REQUEST_METHODS.POST,
           baseURL: String('http://some-invalid-url'),
           headers: { 'content-type': 'application/json' },
           params: {},

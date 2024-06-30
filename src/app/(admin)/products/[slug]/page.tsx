@@ -2,7 +2,7 @@ import { Show } from '@/lib/views';
 import Product from '@/components/product';
 import Exception from '@/components/exception';
 import processEnv from '../../../../../next-env';
-import { getProduct, updateProductAdmin } from '@/lib/actions';
+import { deleteFilesAdmin, getProduct, uploadFilesAdmin } from '@/lib/actions';
 import {
   App_Exception,
   App_Product_Public,
@@ -30,7 +30,12 @@ export default async function ProductPage({ params }: App_Product_Page) {
           <Exception exception={exception} />
         </Show.When>
         <Show.Else>
-          <Product product={product} baseURL={processEnv.BASE_URL} updateProduct={updateProductAdmin} />
+          <Product
+            product={product}
+            baseURL={processEnv.BASE_URL}
+            uploadFilesAction={uploadFilesAdmin}
+            deleteFilesAction={deleteFilesAdmin}
+          />
         </Show.Else>
       </Show>
     </main>

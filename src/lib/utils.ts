@@ -22,6 +22,15 @@ export function getRequestConfig(identifier: number, request: App_Request) {
     case API_END_POINTS.UPDATE_PRODUCT_ADMIN:
       url = `/content-manager/collection-types/api::product.product/${request.params.id}`;
       break;
+    case API_END_POINTS.GET_MEDIA_LIBRARY_ADMIN:
+      url = '/upload/files';
+      break;
+    case API_END_POINTS.UPLOAD_FILES_ADMIN:
+      url = '/upload';
+      break;
+    case API_END_POINTS.DELETE_FILES_ADMIN:
+      url = '/upload/actions/bulk-delete';
+      break;
     case API_END_POINTS.REGISTER:
       url = '/api/auth/local/register';
       break;

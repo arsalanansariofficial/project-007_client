@@ -94,6 +94,7 @@ export type App_Response_Data_Public<T> = {
 };
 
 export type App_Response_File = {
+  id: number;
   url: string;
   name: string;
   hash: string;

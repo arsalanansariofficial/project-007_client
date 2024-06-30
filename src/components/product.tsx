@@ -1,33 +1,41 @@
 'use client';
 import Link from 'next/link';
 import Button from './button';
-import { useState } from 'react';
 import { Each } from '@/lib/views';
-import { ROUTES } from '@/lib/constants';
-import { updateProductAdmin } from '@/lib/actions';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import useRouterGuard from '@/hooks/useRouterGuard';
+import { deleteFilesAdmin, getMediaLibraryAdmin } from '@/lib/actions';
+import { IDENTIFIERS, REQUEST_BODY, ROUTES } from '@/lib/constants';
+import { updateProductAdmin, uploadFilesAdmin } from '@/lib/actions';
 import {
+  App_Response,
   App_Response_File,
   App_Product_Public,
-  App_Response_Data_Public
+  App_Exception
 } from '@/lib/types';
 
 type App_Product_Component = {
   baseURL: string;
   product: App_Product_Public;
-  updateProduct: typeof updateProductAdmin;
+  uploadFilesAction: typeof uploadFilesAdmin;
+  deleteFilesAction: typeof deleteFilesAdmin;
 };
 
 export default function Product({
   product,
   baseURL,
-  updateProduct
+  uploadFilesAction,
+  deleteFilesAction
 }: App_Product_Component) {
   const token = useRouterGuard()?.token!;
+  const productImages = product.attributes.imagePath.data.map(
+    file => ({ ...file, ...file.attributes } as App_Response_File)
+  );
+
   const [isOpen, setIsOpen] = useState(false);
   const [mediaIndex, setMediaIndex] = useState(0);
-  const [images, setImages] = useState(product.attributes.imagePath.data);
-  const [mediaLib, setMediaLib] = useState(product.attributes.imagePath.data);
+  const [images, setImages] = useState(productImages);
+  const [mediaLib, setMediaLib] = useState(productImages);
 
   function toggleMediaLib() {
     setIsOpen(isOpen => !isOpen);
@@ -38,9 +46,7 @@ export default function Product({
     setMediaIndex(index);
   }
 
-  function handleImageUpdate(
-    image: App_Response_Data_Public<App_Response_File>
-  ) {
+  function handleImageUpdate(image: App_Response_File) {
     setIsOpen(false);
     setImages(function (images) {
       // creating a deep copy
@@ -50,24 +56,93 @@ export default function Product({
     });
   }
 
+  async function getMediaLibrary() {
+    const formdata = new FormData();
+    formdata.set(IDENTIFIERS.TOKEN, token);
+
+    const response = (await getMediaLibraryAdmin(formdata)) as App_Response<
+      App_Response_File[]
+    >;
+
+    setMediaLib(response.results);
+    toggleMediaLib();
+  }
+
+  async function handleFilesUpload(
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> {
+    event.preventDefault();
+
+    const formdata = new FormData(event.currentTarget);
+    formdata.set(IDENTIFIERS.TOKEN, token);
+
+    const response = await uploadFilesAction(formdata);
+    const exception = response as App_Exception;
+    const files = response as App_Response_File[];
+
+    if (!exception.status)
+      setMediaLib(function (lib) {
+        return [...files, ...lib];
+      });
+  }
+
+  async function handleFilesDelete(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const fileIds = [] as number[];
+    const formdata = new FormData(event.target as HTMLFormElement);
+
+    formdata.forEach(fd => fileIds.push(Number(fd)));
+    formdata.set(IDENTIFIERS.TOKEN, token);
+    formdata.set(
+      REQUEST_BODY.DELETE_FILES_ADMIN.fileIds,
+      JSON.stringify(fileIds)
+    );
+
+    const response = await deleteFilesAction(formdata);
+    const exception = response as App_Exception;
+
+    if (!exception.status)
+      setMediaLib(function (mediLib) {
+        return mediLib.filter(file => !fileIds.includes(file.id));
+      });
+  }
+
   return (
     <div key={product.id}>
       <dialog open={isOpen}>
-        <Each
-          of={mediaLib}
-          render={function (image, index) {
-            return (
-              <img
-                width={200}
-                height={200}
-                key={image.id}
-                alt={product.attributes.description}
-                src={baseURL + image.attributes.url}
-                onClick={handleImageUpdate.bind(null, image)}
-              />
-            );
-          }}
-        />
+        <form onSubmit={handleFilesUpload}>
+          <input multiple id="files" type="file" name="files" />
+          <button type="button" onClick={toggleMediaLib}>
+            Close
+          </button>
+          <button type="submit">Upload</button>
+        </form>
+        <form onSubmit={handleFilesDelete}>
+          <button type="submit">Delete Files</button>
+          <Each
+            of={mediaLib}
+            render={function (image) {
+              return (
+                <div>
+                  <img
+                    width={200}
+                    height={200}
+                    key={image.id}
+                    alt={product.attributes.description}
+                    src={baseURL + image.url}
+                    onClick={handleImageUpdate.bind(null, image)}
+                  />
+                  <input
+                    type="checkbox"
+                    name={String(image.id)}
+                    value={image.id}
+                  />
+                </div>
+              );
+            }}
+          />
+        </form>
       </dialog>
       <Each
         of={images}
@@ -79,7 +154,7 @@ export default function Product({
                 height={200}
                 key={image.id}
                 alt={product.attributes.description}
-                src={baseURL + image.attributes.url}
+                src={baseURL + image.url}
                 onClick={handleMediaIndex.bind(null, index)}
               />
             </Link>
@@ -131,7 +206,7 @@ export default function Product({
             <option value="false">Not Available</option>
           </select>
         </div>
-        <button type="button" onClick={toggleMediaLib}>
+        <button type="button" onClick={getMediaLibrary}>
           Media Library
         </button>
         <Button fallback="Applying..." type="submit" text="Apply Changes" />

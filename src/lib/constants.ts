@@ -5,12 +5,15 @@ export const BOOLEAN = {
 
 export const IDENTIFIERS = {
   USER: 'USER',
+  FILES: 'files',
   TOKEN: 'TOKEN',
+  BEARER: 'Bearer',
+  FILE_INFO: 'fileInfo',
   AVAILABLE: 'AVAILABLE',
   NOT_AVAILABLE: 'NOT_AVAILABLE'
 };
 
-export const REQUEST_LOGINTHODS = {
+export const REQUEST_METHODS = {
   GET: 'GET',
   PUT: 'PUT',
   POST: 'POST',
@@ -26,6 +29,9 @@ export const ROUTES = {
 };
 
 export const REQUEST_BODY = {
+  DELETE_FILES_ADMIN: {
+    fileIds: 'fileIds'
+  },
   USER_AUTHENTICATION: {
     password: 'password',
     identifier: 'identifier'
