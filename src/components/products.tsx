@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Exception from './exception';
 import { Show, Each } from '@/lib/views';
-import useRouterGuard from '@/hooks/useRouterGuard';
+import useRouterGuard from '@/hooks/use-router-guard';
 import { IDENTIFIERS, ROUTES } from '@/lib/constants';
 import { App_Exception, App_Product_Public } from '@/lib/types';
 

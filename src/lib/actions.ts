@@ -10,8 +10,7 @@ import {
   App_Exception,
   App_Response_File,
   App_Product_Public,
-  App_Authenticated_User,
-  App_Response_Data_Public
+  App_Authenticated_User
 } from './types';
 import {
   ROUTES,

@@ -2,32 +2,27 @@
 import Button from './button';
 import { Show } from '@/lib/views';
 import Exception from './exception';
+import useAuth from '@/hooks/use-auth';
 import { useFormState } from 'react-dom';
-import { storeObject } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
-import { IDENTIFIERS, ROUTES } from '@/lib/constants';
 import { App_Admin, App_Exception } from '@/lib/types';
 import { loginAdmin as loginAdminAction } from '@/lib/actions';
 
 export type App_Home = {
+  sessionTime: number;
   loginAdmin: typeof loginAdminAction;
 };
 
-export default function Home({ loginAdmin }: App_Home) {
+export default function Home({ loginAdmin, sessionTime }: App_Home) {
   const [state, formAction] = useFormState(loginAdmin, {});
 
-  const router = useRouter();
   const user = state?.data as App_Admin;
   const exception = state as App_Exception;
 
-  if (user && user.token) {
-    storeObject(IDENTIFIERS.USER, user);
-    router.push(ROUTES.DASHBOARD);
-  }
+  const { login } = useAuth(sessionTime);
+  if (user && user.token) login(user);
 
   return (
     <main>
-      <h1>Home Page</h1>
       <form action={formAction}>
         <Show>
           <Show.When isTrue={!!exception.status}>

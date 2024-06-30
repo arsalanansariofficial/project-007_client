@@ -1,9 +1,11 @@
 'use client';
 import { Show } from '@/lib/views';
 import Exception from './exception';
+import useAuth from '@/hooks/use-auth';
 import { useEffect, useState } from 'react';
 import { IDENTIFIERS } from '@/lib/constants';
 import { getProducts, getSales } from '@/lib/actions';
+import useRouterGuard from '@/hooks/use-router-guard';
 import {
   App_User,
   App_Order,
@@ -12,14 +14,16 @@ import {
   App_Product_Public,
   App_Response_Public
 } from '@/lib/types';
-import useRouterGuard from '@/hooks/useRouterGuard';
 
 export type App_Dashboard = {
+  sessionTime: number;
   getSales: typeof getSales;
 };
 
-export default function Dashboard({ getSales }: App_Dashboard) {
+export default function Dashboard({ getSales, sessionTime }: App_Dashboard) {
   const user = useRouterGuard();
+  useAuth(sessionTime).autoLogin();
+
   const [sales, setSales] = useState(0);
   const [averageValue, setAverageValue] = useState(0);
   const [orders, setOrders] = useState<App_Order[]>([]);

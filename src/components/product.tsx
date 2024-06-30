@@ -1,21 +1,23 @@
 'use client';
 import Link from 'next/link';
 import Button from './button';
-import { Each } from '@/lib/views';
-import { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import useRouterGuard from '@/hooks/useRouterGuard';
-import { deleteFilesAdmin, getMediaLibraryAdmin } from '@/lib/actions';
+import useAuth from '@/hooks/use-auth';
+import useAsync from '@/hooks/use-http';
+import { Each, Show } from '@/lib/views';
+import { FormEvent, useState } from 'react';
+import useRouterGuard from '@/hooks/use-router-guard';
 import { IDENTIFIERS, REQUEST_BODY, ROUTES } from '@/lib/constants';
 import { updateProductAdmin, uploadFilesAdmin } from '@/lib/actions';
+import { deleteFilesAdmin, getMediaLibraryAdmin } from '@/lib/actions';
 import {
   App_Response,
   App_Response_File,
-  App_Product_Public,
-  App_Exception
+  App_Product_Public
 } from '@/lib/types';
 
 type App_Product_Component = {
   baseURL: string;
+  sessionTime: number;
   product: App_Product_Public;
   uploadFilesAction: typeof uploadFilesAdmin;
   deleteFilesAction: typeof deleteFilesAdmin;
@@ -24,10 +26,13 @@ type App_Product_Component = {
 export default function Product({
   product,
   baseURL,
+  sessionTime,
   uploadFilesAction,
   deleteFilesAction
 }: App_Product_Component) {
-  const token = useRouterGuard()?.token!;
+  useAuth(sessionTime).autoLogin();
+  const token = useRouterGuard()?.token as string;
+
   const productImages = product.attributes.imagePath.data.map(
     file => ({ ...file, ...file.attributes } as App_Response_File)
   );
@@ -36,6 +41,8 @@ export default function Product({
   const [mediaIndex, setMediaIndex] = useState(0);
   const [images, setImages] = useState(productImages);
   const [mediaLib, setMediaLib] = useState(productImages);
+
+  const { isLoading, exception, sendRequest } = useAsync();
 
   function toggleMediaLib() {
     setIsOpen(isOpen => !isOpen);
@@ -60,12 +67,14 @@ export default function Product({
     const formdata = new FormData();
     formdata.set(IDENTIFIERS.TOKEN, token);
 
-    const response = (await getMediaLibraryAdmin(formdata)) as App_Response<
-      App_Response_File[]
-    >;
+    const response = (await sendRequest(
+      getMediaLibraryAdmin.bind(null, formdata)
+    )) as App_Response<App_Response_File[]>;
 
-    setMediaLib(response.results);
-    toggleMediaLib();
+    if (!exception) {
+      setMediaLib(response.results);
+      toggleMediaLib();
+    }
   }
 
   async function handleFilesUpload(
@@ -76,11 +85,10 @@ export default function Product({
     const formdata = new FormData(event.currentTarget);
     formdata.set(IDENTIFIERS.TOKEN, token);
 
-    const response = await uploadFilesAction(formdata);
-    const exception = response as App_Exception;
+    const response = await sendRequest(uploadFilesAction.bind(null, formdata));
     const files = response as App_Response_File[];
 
-    if (!exception.status)
+    if (!exception)
       setMediaLib(function (lib) {
         return [...files, ...lib];
       });
@@ -99,10 +107,9 @@ export default function Product({
       JSON.stringify(fileIds)
     );
 
-    const response = await deleteFilesAction(formdata);
-    const exception = response as App_Exception;
+    await sendRequest(deleteFilesAction.bind(null, formdata));
 
-    if (!exception.status)
+    if (!exception)
       setMediaLib(function (mediLib) {
         return mediLib.filter(file => !fileIds.includes(file.id));
       });
@@ -116,10 +123,20 @@ export default function Product({
           <button type="button" onClick={toggleMediaLib}>
             Close
           </button>
-          <button type="submit">Upload</button>
+          <button type="submit">
+            <Show>
+              <Show.When isTrue={isLoading}>Uploading files...</Show.When>
+              <Show.Else>Upload</Show.Else>
+            </Show>
+          </button>
         </form>
         <form onSubmit={handleFilesDelete}>
-          <button type="submit">Delete Files</button>
+          <button type="submit">
+            <Show>
+              <Show.When isTrue={isLoading}>Deleting files...</Show.When>
+              <Show.Else>Delete Files</Show.Else>
+            </Show>
+          </button>
           <Each
             of={mediaLib}
             render={function (image) {
@@ -207,7 +224,10 @@ export default function Product({
           </select>
         </div>
         <button type="button" onClick={getMediaLibrary}>
-          Media Library
+          <Show>
+            <Show.When isTrue={isLoading}>Getting media...</Show.When>
+            <Show.Else>Media Library</Show.Else>
+          </Show>
         </button>
         <Button fallback="Applying..." type="submit" text="Apply Changes" />
       </form>

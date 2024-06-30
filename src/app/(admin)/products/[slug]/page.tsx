@@ -35,6 +35,7 @@ export default async function ProductPage({ params }: App_Product_Page) {
             baseURL={processEnv.BASE_URL}
             uploadFilesAction={uploadFilesAdmin}
             deleteFilesAction={deleteFilesAdmin}
+            sessionTime={Number(processEnv.SESSION_TIME)}
           />
         </Show.Else>
       </Show>

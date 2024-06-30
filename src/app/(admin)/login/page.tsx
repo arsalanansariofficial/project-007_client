@@ -1,5 +1,6 @@
 import Home from '@/components/home';
-import { loginAdmin, loginUser } from '@/lib/actions';
+import { loginAdmin } from '@/lib/actions';
+import processEnv from '../../../../next-env';
 
 export const metadata = {
   title: 'Project 007',
@@ -7,5 +8,10 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  return <Home loginAdmin={loginAdmin} />;
+  return (
+    <Home
+      loginAdmin={loginAdmin}
+      sessionTime={Number(processEnv.SESSION_TIME)}
+    />
+  );
 }

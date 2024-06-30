@@ -3,16 +3,6 @@ export const BOOLEAN = {
   FALSE: 'false'
 };
 
-export const IDENTIFIERS = {
-  USER: 'USER',
-  FILES: 'files',
-  TOKEN: 'TOKEN',
-  BEARER: 'Bearer',
-  FILE_INFO: 'fileInfo',
-  AVAILABLE: 'AVAILABLE',
-  NOT_AVAILABLE: 'NOT_AVAILABLE'
-};
-
 export const REQUEST_METHODS = {
   GET: 'GET',
   PUT: 'PUT',
@@ -26,6 +16,16 @@ export const ROUTES = {
   ORDERS: '/orders',
   PRODUCTS: '/products/',
   DASHBOARD: '/dashboard'
+};
+
+export const IDENTIFIERS = {
+  USER: 'USER',
+  FILES: 'files',
+  TOKEN: 'TOKEN',
+  BEARER: 'Bearer',
+  FILE_INFO: 'fileInfo',
+  AVAILABLE: 'AVAILABLE',
+  NOT_AVAILABLE: 'NOT_AVAILABLE'
 };
 
 export const REQUEST_BODY = {

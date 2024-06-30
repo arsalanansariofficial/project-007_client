@@ -69,6 +69,7 @@ export type App_Order = {
 
 export type App_Admin = {
   token: string;
+  sessionTime: string;
   user: {
     id: number;
     email: string;
