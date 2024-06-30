@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Button from './button';
+import Header from './header-admin';
 import useAuth from '@/hooks/use-auth';
 import useAsync from '@/hooks/use-http';
 import { Each, Show } from '@/lib/views';
@@ -30,8 +31,10 @@ export default function Product({
   uploadFilesAction,
   deleteFilesAction
 }: App_Product_Component) {
-  useAuth(sessionTime).autoLogin();
-  const token = useRouterGuard()?.token as string;
+  const user = useRouterGuard();
+  const token = user?.token;
+  const { logout, autoLogin } = useAuth(sessionTime);
+  autoLogin();
 
   const productImages = product.attributes.imagePath.data.map(
     file => ({ ...file, ...file.attributes } as App_Response_File)
@@ -116,121 +119,124 @@ export default function Product({
   }
 
   return (
-    <div key={product.id}>
-      <dialog open={isOpen}>
-        <form onSubmit={handleFilesUpload}>
-          <input multiple id="files" type="file" name="files" />
-          <button type="button" onClick={toggleMediaLib}>
-            Close
-          </button>
-          <button type="submit">
+    <>
+      <Header user={user} handleLogout={logout} />
+      <main key={product.id}>
+        <dialog open={isOpen}>
+          <form onSubmit={handleFilesUpload}>
+            <input multiple id="files" type="file" name="files" />
+            <button type="button" onClick={toggleMediaLib}>
+              Close
+            </button>
+            <button type="submit">
+              <Show>
+                <Show.When isTrue={isLoading}>Uploading files...</Show.When>
+                <Show.Else>Upload</Show.Else>
+              </Show>
+            </button>
+          </form>
+          <form onSubmit={handleFilesDelete}>
+            <button type="submit">
+              <Show>
+                <Show.When isTrue={isLoading}>Deleting files...</Show.When>
+                <Show.Else>Delete Files</Show.Else>
+              </Show>
+            </button>
+            <Each
+              of={mediaLib}
+              render={function (image) {
+                return (
+                  <div>
+                    <img
+                      width={200}
+                      height={200}
+                      key={image.id}
+                      alt={product.attributes.description}
+                      src={baseURL + image.url}
+                      onClick={handleImageUpdate.bind(null, image)}
+                    />
+                    <input
+                      type="checkbox"
+                      name={String(image.id)}
+                      value={image.id}
+                    />
+                  </div>
+                );
+              }}
+            />
+          </form>
+        </dialog>
+        <Each
+          of={images}
+          render={function (image, index) {
+            return (
+              <Link href={ROUTES.PRODUCTS + product.id}>
+                <img
+                  width={200}
+                  height={200}
+                  key={image.id}
+                  alt={product.attributes.description}
+                  src={baseURL + image.url}
+                  onClick={handleMediaIndex.bind(null, index)}
+                />
+              </Link>
+            );
+          }}
+        />
+        <form action={updateProductAdmin.bind(null, token, product, images)}>
+          <div className="form-control">
+            <label htmlFor="product-id">Product ID</label>
+            <input
+              disabled
+              type="text"
+              id="product-id"
+              name="product-id"
+              placeholder={String(product.id)}
+            />
+          </div>
+          <div className="form-control">
+            <label htmlFor="product-name">Product Name</label>
+            <input
+              type="text"
+              id="product-name"
+              name="product-name"
+              placeholder={product.attributes.name}
+            />
+          </div>
+          <div className="form-control">
+            <label htmlFor="product-description">Product Description</label>
+            <input
+              type="text"
+              id="product-description"
+              name="product-description"
+              placeholder={product.attributes.description}
+            />
+          </div>
+          <div className="form-control">
+            <label htmlFor="product-price">Product Price</label>
+            <input
+              type="text"
+              id="product-price"
+              name="product-price"
+              placeholder={String(product.attributes.priceInCents)}
+            />
+          </div>
+          <div className="form-control">
+            <label htmlFor="product-availability">Product Availability</label>
+            <select name="product-availability" id="product-availability">
+              <option value="true">Available</option>
+              <option value="false">Not Available</option>
+            </select>
+          </div>
+          <button type="button" onClick={getMediaLibrary}>
             <Show>
-              <Show.When isTrue={isLoading}>Uploading files...</Show.When>
-              <Show.Else>Upload</Show.Else>
+              <Show.When isTrue={isLoading}>Getting media...</Show.When>
+              <Show.Else>Media Library</Show.Else>
             </Show>
           </button>
+          <Button fallback="Applying..." type="submit" text="Apply Changes" />
         </form>
-        <form onSubmit={handleFilesDelete}>
-          <button type="submit">
-            <Show>
-              <Show.When isTrue={isLoading}>Deleting files...</Show.When>
-              <Show.Else>Delete Files</Show.Else>
-            </Show>
-          </button>
-          <Each
-            of={mediaLib}
-            render={function (image) {
-              return (
-                <div>
-                  <img
-                    width={200}
-                    height={200}
-                    key={image.id}
-                    alt={product.attributes.description}
-                    src={baseURL + image.url}
-                    onClick={handleImageUpdate.bind(null, image)}
-                  />
-                  <input
-                    type="checkbox"
-                    name={String(image.id)}
-                    value={image.id}
-                  />
-                </div>
-              );
-            }}
-          />
-        </form>
-      </dialog>
-      <Each
-        of={images}
-        render={function (image, index) {
-          return (
-            <Link href={ROUTES.PRODUCTS + product.id}>
-              <img
-                width={200}
-                height={200}
-                key={image.id}
-                alt={product.attributes.description}
-                src={baseURL + image.url}
-                onClick={handleMediaIndex.bind(null, index)}
-              />
-            </Link>
-          );
-        }}
-      />
-      <form action={updateProductAdmin.bind(null, token, product, images)}>
-        <div className="form-control">
-          <label htmlFor="product-id">Product ID</label>
-          <input
-            disabled
-            type="text"
-            id="product-id"
-            name="product-id"
-            placeholder={String(product.id)}
-          />
-        </div>
-        <div className="form-control">
-          <label htmlFor="product-name">Product Name</label>
-          <input
-            type="text"
-            id="product-name"
-            name="product-name"
-            placeholder={product.attributes.name}
-          />
-        </div>
-        <div className="form-control">
-          <label htmlFor="product-description">Product Description</label>
-          <input
-            type="text"
-            id="product-description"
-            name="product-description"
-            placeholder={product.attributes.description}
-          />
-        </div>
-        <div className="form-control">
-          <label htmlFor="product-price">Product Price</label>
-          <input
-            type="text"
-            id="product-price"
-            name="product-price"
-            placeholder={String(product.attributes.priceInCents)}
-          />
-        </div>
-        <div className="form-control">
-          <label htmlFor="product-availability">Product Availability</label>
-          <select name="product-availability" id="product-availability">
-            <option value="true">Available</option>
-            <option value="false">Not Available</option>
-          </select>
-        </div>
-        <button type="button" onClick={getMediaLibrary}>
-          <Show>
-            <Show.When isTrue={isLoading}>Getting media...</Show.When>
-            <Show.Else>Media Library</Show.Else>
-          </Show>
-        </button>
-        <Button fallback="Applying..." type="submit" text="Apply Changes" />
-      </form>
-    </div>
+      </main>
+    </>
   );
 }

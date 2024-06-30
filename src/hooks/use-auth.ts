@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { App_Admin } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { IDENTIFIERS, ROUTES } from '@/lib/constants';
@@ -8,15 +8,17 @@ export default function useAuth(sessionTime: number) {
   const router = useRouter();
   const timeout = useRef<null | NodeJS.Timeout>(null);
 
+  function cleanUp() {
+    clearTimeout(timeout.current as NodeJS.Timeout);
+    timeout.current = null;
+  }
+
   function logout() {
     const user = retrieveObject<App_Admin>(IDENTIFIERS.USER);
 
     if (user && user.token) {
-      clearTimeout(timeout.current as NodeJS.Timeout);
-
-      timeout.current = null;
+      cleanUp();
       deleteObject(IDENTIFIERS.USER);
-
       return router.push(ROUTES.LOGIN);
     }
   }
@@ -38,13 +40,15 @@ export default function useAuth(sessionTime: number) {
     const date = new Date();
     const sessionTimeInMillis = sessionTime * 1000;
     const sessionTimeout = date.getTime() + sessionTimeInMillis;
-    
+
     user.sessionTime = new Date(sessionTimeout).toISOString();
     timeout.current = setTimeout(logout, sessionTimeInMillis);
     storeObject(IDENTIFIERS.USER, user);
 
     return router.push(ROUTES.DASHBOARD);
   }
+
+  useEffect(() => cleanUp, []);
 
   return { logout, login, autoLogin };
 }

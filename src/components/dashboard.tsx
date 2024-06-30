@@ -14,6 +14,7 @@ import {
   App_Product_Public,
   App_Response_Public
 } from '@/lib/types';
+import Header from './header-admin';
 
 export type App_Dashboard = {
   sessionTime: number;
@@ -22,7 +23,7 @@ export type App_Dashboard = {
 
 export default function Dashboard({ getSales, sessionTime }: App_Dashboard) {
   const user = useRouterGuard();
-  useAuth(sessionTime).autoLogin();
+  const { logout, autoLogin } = useAuth(sessionTime);
 
   const [sales, setSales] = useState(0);
   const [averageValue, setAverageValue] = useState(0);
@@ -115,26 +116,30 @@ export default function Dashboard({ getSales, sessionTime }: App_Dashboard) {
         handleProducts(productsResponse);
       }
 
+      autoLogin();
       if (user && user.token) init();
     },
     [user]
   );
 
   return (
-    <main>
-      <Show>
-        <Show.When isTrue={!!exception}>
-          <Exception exception={exception} />
-        </Show.When>
-        <Show.Else>
-          <p>sales: {sales}</p>
-          <p>orders: {orders.length}</p>
-          <p>average value: {averageValue}</p>
-          <p>customers: {customers.length}</p>
-          <p>products: {products.length}</p>
-          <p>inactive products: {inactiveProducts.length}</p>
-        </Show.Else>
-      </Show>
-    </main>
+    <>
+      <Header user={user} handleLogout={logout} />
+      <main>
+        <Show>
+          <Show.When isTrue={!!exception}>
+            <Exception exception={exception} />
+          </Show.When>
+          <Show.Else>
+            <p>sales: {sales}</p>
+            <p>orders: {orders.length}</p>
+            <p>average value: {averageValue}</p>
+            <p>customers: {customers.length}</p>
+            <p>products: {products.length}</p>
+            <p>inactive products: {inactiveProducts.length}</p>
+          </Show.Else>
+        </Show>
+      </main>
+    </>
   );
 }
